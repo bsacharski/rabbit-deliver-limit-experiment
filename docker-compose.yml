@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  producer:
+    profiles:
+      - producer
+    image: bsacharski/php-rabbit
+    build:
+      dockerfile: php.Dockerfile
+      target: php
+    volumes:
+      - ./app:/app
+    command: [ "php", "producer.php" ]
+    restart: no
+
+  consumer:
+    profiles:
+      - consumer
+    image: bsacharski/php-rabbit
+    build:
+      dockerfile: php.Dockerfile
+      target: php
+    volumes:
+      - ./app:/app
+    command: [ "php", "consumer.php", "1" ]
+    restart: no
+
+  consumer2:
+    profiles:
+      - consumer2
+    image: bsacharski/php-rabbit
+    build:
+      dockerfile: php.Dockerfile
+      target: php
+    volumes:
+      - ./app:/app
+    command: [ "php", "consumer.php", "2" ]
+    restart: no
+
+  rabbit:
+    image: rabbitmq:3.12-management-alpine
+    profiles:
+      - base
+    ports:
+      - target: 15672
+        published: 15672
+        protocol: tcp
