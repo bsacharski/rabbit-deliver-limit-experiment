@@ -37,11 +37,6 @@ createExchange('dlExchange', $channel);
 createQueue($queueName, $channel, 'dlExchange');
 createQueue("{$queueName}.dlq", $channel);
 
-$args = new AMQPTable([
-    'x-queue-type' => 'quorum',
-    'delivery-limit' => 3,
-    'x-dead-letter-exchange' => "{$queueName}.dlq"
-]);
 $channel->queue_bind($queueName, 'normalExchange');
 $channel->queue_bind("{$queueName}.dlq", 'dlExchange');
 
